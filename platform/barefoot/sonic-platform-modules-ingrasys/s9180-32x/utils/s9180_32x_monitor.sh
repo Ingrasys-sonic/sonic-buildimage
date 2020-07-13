@@ -16,6 +16,10 @@
 
 INTERVAL=5
 I2C_UTILS="/usr/sbin/i2c_utils.sh"
+UTIL_PATH="/usr/sbin"
+WRAP_UTIL="i2c_utils_wrap.sh"
+BMC_UTIL="i2c_utils_bmc.sh"
+BMC_ENABLE=0
 
 
 # TBD:  LED status monitor
@@ -25,10 +29,26 @@ function _led_monitor {
     ${I2C_UTILS} i2c_led_fan_tray_status_set >/dev/null
 }
 
+function _check_bmc_enable  {
+    # check the link target to identify current state
+    res=`readlink -e ${UTIL_PATH}/${WRAP_UTIL} | grep ${BMC_UTIL}`
+    
+    if [ -z $res ]; then
+        # the link target not exist or not bmc enable target
+        BMC_ENABLE=0
+    else
+        BMC_ENABLE=1
+    fi
+}
+
 # main function
 function _main {
     while true
     do
+        if ((BMC_ENABLE)); then
+            # exit loop for bmc enabled platform
+            break;
+        fi
         #PSU controlled by dummy board, 
         #but fan LED and fan tray LED must controlled by this service
         _led_monitor
@@ -38,5 +58,7 @@ function _main {
         wait $!
     done
 }
+
+_check_bmc_enable
 
 _main
