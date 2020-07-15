@@ -1,0 +1,1 @@
+link i2c_utils_nobmc.sh
