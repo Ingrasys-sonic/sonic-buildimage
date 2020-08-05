@@ -7,6 +7,7 @@ import os
 
 try:
     import time
+    import json
     from sonic_sfp.sfputilbase import SfpUtilBase
 except ImportError as e:
     raise ImportError("%s - required module not found" % str(e))
@@ -66,6 +67,12 @@ class SfpUtil(SfpUtilBase):
     lpmode_to_gpio_mapping = {}
     reset_to_gpio_mapping = {}
 
+    # xcvr change event data
+    SFP_STATUS_INSERTED = '1'
+    SFP_STATUS_REMOVED = '0'
+    CHECK_INTERVAL = 2    # presence check interval
+    cur_ports_state = {}     # current port state list
+    
     @property
     def port_start(self):
         return self.PORT_START
@@ -323,10 +330,37 @@ class SfpUtil(SfpUtilBase):
 
         return True
 
-    def get_transceiver_change_event(self):
-        """
-        TODO: This function need to be implemented
-        when decide to support monitoring SFP(Xcvrd)
-        on this platform.
-        """
-        raise NotImplementedError
+    def get_transceiver_change_event(self, timeout=0):
+        state_changed = False
+        forever = False
+        port_dict = {}
+
+        if timeout == 0:
+            forever = True
+        elif timeout > 0:
+            timeout /= float(1000) # Convert to secs
+
+        while forever or timeout > 0:
+            for port in range(self.port_start, self.port_end + 1):
+                port_state = self.SFP_STATUS_INSERTED if self.get_presence(port) else self.SFP_STATUS_REMOVED
+
+                if port in self.cur_ports_state:
+                    if self.cur_ports_state[port] != port_state:
+                        state_changed = True
+                        port_dict[port] = self.cur_ports_state[port] = port_state
+                else:
+                    # first run or not change before
+                    state_changed = True
+                    port_dict[port] = self.cur_ports_state[port] = port_state
+
+            if state_changed:
+                break;
+            
+            time.sleep(self.CHECK_INTERVAL)
+            timeout -= self.CHECK_INTERVAL
+
+        # return ports state if changed
+        if state_changed:
+            return True, port_dict
+        else:
+            return True, {}

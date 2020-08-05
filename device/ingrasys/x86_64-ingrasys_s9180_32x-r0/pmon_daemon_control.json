@@ -2,6 +2,6 @@
     "skip_thermalctld": true,
     "skip_ledd": true,
     "skip_xcvrd": false,
-    "skip_psud": false,
+    "skip_psud": true,
     "skip_syseepromd": false 
 }
