@@ -81,11 +81,9 @@ WRAP_UTIL="i2c_utils_wrap.sh"
 
 SHARE_PATH="/usr/share/sonic/device/x86_64-ingrasys_s9180_32x-r0"
 
-BMC_FANCTL="fancontrol.bmc"
 NOBMC_FANCTL="fancontrol.nobmc"
 FANCTL_CFG="fancontrol"
 
-BMC_SENSORS="sensors_bmc.conf"
 NOBMC_SENSORS="sensors_nobmc.conf"
 SENSORS_CFG="sensors.conf"
 
@@ -117,10 +115,10 @@ function _adapt_bmc_enable  {
     	# change utils script link target
     	rm -rf ${UTIL_PATH}/${WRAP_UTIL}
     	ln -s ${UTIL_PATH}/${BMC_UTIL} ${UTIL_PATH}/${WRAP_UTIL}
-    	# change sensors config
-    	cp -f ${SHARE_PATH}/${BMC_SENSORS} ${SHARE_PATH}/${SENSORS_CFG}
-    	# change fancontrol config
-    	cp -f ${SHARE_PATH}/${BMC_FANCTL} ${SHARE_PATH}/${FANCTL_CFG}
+        # remove sensors config
+        rm -f ${SHARE_PATH}/${SENSORS_CFG}
+        # remove fancontrol config
+        rm -f ${SHARE_PATH}/${FANCTL_CFG}
     	# change plugin python script for psuutil
     	rm -f ${PLUGIN_PATH}/${PSUUTIL_PYC}
     	cp -f ${PLUGIN_PATH}/${BMC_PSUUTIL} ${PLUGIN_PATH}/${PSUUTIL} 	

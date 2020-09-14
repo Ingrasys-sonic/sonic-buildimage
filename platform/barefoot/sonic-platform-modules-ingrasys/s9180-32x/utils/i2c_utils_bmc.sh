@@ -179,6 +179,9 @@ function _i2c_init {
     modprobe i2c_dev
     modprobe i2c_mux_pca954x force_deselect_on_exit=1
     #modprobe cpld_wdt
+    # enbale accessing bmc via ipmitool
+    modprobe ipmi_devintf
+    modprobe ipmi_si
 
     if [ ! -e "${PATH_SYS_I2C_DEVICES}/i2c-${NUM_MUX1_CHAN0_DEVICE}" ]; then
         _retry "echo 'pca9548 0x70' > ${PATH_I801_DEVICE}/new_device"
@@ -456,13 +459,9 @@ function _i2c_gpio_init {
     do
         echo $i > /sys/class/gpio/export
         case ${i} in
-            #176|177|178|179|182|183|188|189|190|191)
+            #176|177|188|189|190|191)
             $((${GPIO_OFFSET}+176)) | \
             $((${GPIO_OFFSET}+177)) | \
-            $((${GPIO_OFFSET}+178)) | \
-            $((${GPIO_OFFSET}+179)) | \
-            $((${GPIO_OFFSET}+182)) | \
-            $((${GPIO_OFFSET}+183)) | \
             $((${GPIO_OFFSET}+188)) | \
             $((${GPIO_OFFSET}+189)) | \
             $((${GPIO_OFFSET}+190)) | \
@@ -539,9 +538,10 @@ function _i2c_gpio_init {
     do
         echo $i > /sys/class/gpio/export
         echo 1 > /sys/class/gpio/gpio${i}/active_low
-        echo low > /sys/class/gpio/gpio${i}/direction
-        #echo out > /sys/class/gpio/gpio${i}/direction
-        #echo 0 > /sys/class/gpio/gpio${i}/value
+        # value low for direction not official support
+        #echo low > /sys/class/gpio/gpio${i}/direction
+        echo out > /sys/class/gpio/gpio${i}/direction
+        echo 0 > /sys/class/gpio/gpio${i}/value
     done
 
     #RST Port 16-31
@@ -551,9 +551,10 @@ function _i2c_gpio_init {
     do
         echo $i > /sys/class/gpio/export
         echo 1 > /sys/class/gpio/gpio${i}/active_low
-        echo low > /sys/class/gpio/gpio${i}/direction
-        #echo out > /sys/class/gpio/gpio${i}/direction
-        #echo 0 > /sys/class/gpio/gpio${i}/value
+        # value low for direction not official support
+        #echo low > /sys/class/gpio/gpio${i}/direction
+        echo out > /sys/class/gpio/gpio${i}/direction
+        echo 0 > /sys/class/gpio/gpio${i}/value
     done
     
 }

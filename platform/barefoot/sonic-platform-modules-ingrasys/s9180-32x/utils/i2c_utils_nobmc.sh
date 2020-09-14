@@ -559,13 +559,9 @@ function _i2c_gpio_init {
     do
         echo $i > /sys/class/gpio/export
         case ${i} in
-            #176|177|178|179|182|183|188|189|190|191)
+            #176|177|188|189|190|191)
             $((${GPIO_OFFSET}+176)) | \
             $((${GPIO_OFFSET}+177)) | \
-            $((${GPIO_OFFSET}+178)) | \
-            $((${GPIO_OFFSET}+179)) | \
-            $((${GPIO_OFFSET}+182)) | \
-            $((${GPIO_OFFSET}+183)) | \
             $((${GPIO_OFFSET}+188)) | \
             $((${GPIO_OFFSET}+189)) | \
             $((${GPIO_OFFSET}+190)) | \
