@@ -1,6 +1,6 @@
 platform-driver (1.1.0) unstable; urgency=low
 
-  * Add support for s9180-32x s9280-64x
+  * Add support for s9180-32x s9280-64x s9280-64x-4bwb
 
  -- developer <developer@ingrasys.com>  Fri, 26 May 2017 11:00:00 +0800
 

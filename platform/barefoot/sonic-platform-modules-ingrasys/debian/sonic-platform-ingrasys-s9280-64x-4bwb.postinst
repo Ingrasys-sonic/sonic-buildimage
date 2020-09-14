@@ -1,0 +1,5 @@
+# postinst script for s9280-4bwb
+
+depmod -a
+
+#DEBHELPER#
