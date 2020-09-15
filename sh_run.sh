@@ -87,7 +87,8 @@ function _build_platform {
         make target/sonic-nephos.bin
     elif [ "${BUILD_PLATFORM}" == "barefoot" ]; then
         make init
-        ls patch-331866db/ -I readme.txt | xargs cp -rf -t ./
+        cp -rf patch-331866db/* ./
+        rm readme.txt
         make configure PLATFORM=barefoot
         BLDENV=stretch make stretch
         make target/sonic-barefoot.bin
