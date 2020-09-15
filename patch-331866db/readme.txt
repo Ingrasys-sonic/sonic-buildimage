@@ -1,9 +1,10 @@
 #!/bin/bash
 
+# change PATCH_PATH where the patch files resided
 PATCH_PATH=/tmp/patch-331866db
 
 
-git clone https://github.com/ufispace-bytedance/sonic-buildimage.git sonic-buildimage-bytedance
+git clone https://github.com/Ingrasys-sonic/sonic-buildimage.git sonic-buildimage-bytedance
 cd sonic-buildimage-bytedance
 make init
 cp -rf ${PATCH_PATH}/* ./
